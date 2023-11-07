@@ -1,0 +1,5 @@
+{
+  "database_name": "tiny_bnb",
+  "listing_collection_name": "tiny_bnb_listing",
+  "user_collection_name": "tiny_bnb_user"
+}
