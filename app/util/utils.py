@@ -21,3 +21,8 @@ def get_mongo_collection(client, collection_name):
     db = client[json_content["database_name"]]
     collection = db[collection_name]
     return collection
+
+def print_value():
+    return "Mike ox-smoll"
+
+    
