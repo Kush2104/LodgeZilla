@@ -3,7 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import pymongo
 import emoji
-from util.utils import read_json, get_mongo_collection, generate_password
+from app.util.utils import read_json, get_mongo_collection, generate_password
 
 mongo_config_file_path = os.path.join(os.path.dirname(__file__), 'config', 'mongo_config.json')
 mongo_config_file_content = read_json(mongo_config_file_path)
