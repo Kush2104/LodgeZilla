@@ -22,7 +22,8 @@ def get_mongo_collection(client, collection_name):
     collection = db[collection_name]
     return collection
 
-def print_value():
-    return "Mike ox-smoll"
+def get_current_user():
+    # Implement this function to get user id
+    return
 
     
