@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from .auth import get_current_user
 from fastapi.responses import JSONResponse
 from typing import List
 import os
@@ -18,7 +19,7 @@ listing_collection = get_mongo_collection(client, mongo_config_file_content["lis
 listing_collection.create_index([("property_id", pymongo.ASCENDING)])
 
 @router.get("/list", response_model=List[dict])
-async def get_listings():
+async def get_listings(current_user: str = Depends(get_current_user)):
     listings = list(listing_collection.find())
     # Convert ObjectId to string for serialization
     for listing in listings:
@@ -28,13 +29,13 @@ async def get_listings():
     return JSONResponse(content=dumps(listings))
 
 @router.post("/add", response_model=Property)
-async def create_item(listing: Property):
+async def create_item(listing: Property, current_user: str = Depends(get_current_user)):
     property_model = listing.dict()
     result = listing_collection.insert_one(property_model)
     return {**listing.dict(), "id": str(result.inserted_id)}
 
 @router.put("/update/{property_id}", response_model=Property)
-async def update_property(property_id: int, updated_data: Property):
+async def update_property(property_id: int, updated_data: Property,  current_user: str = Depends(get_current_user)):
     existing_data = listing_collection.find_one({"property_id": property_id})
     if existing_data is None:
         raise HTTPException(status_code=404, detail="Property not found")
@@ -44,7 +45,7 @@ async def update_property(property_id: int, updated_data: Property):
     return merged_data
 
 @router.delete("/delete/{property_id}")
-async def delete_property(property_id: int):
+async def delete_property(property_id: int, current_user: str = Depends(get_current_user)):
     existing_data = listing_collection.find_one({"property_id": property_id})
     if existing_data is None:
         raise HTTPException(status_code=404, detail="Property not found")
