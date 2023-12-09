@@ -47,7 +47,7 @@ async def search_properties(
         "price": 1,
         "location": 1,
         "rating": 1,
-        "booking_history": 1
+        "summary": 1
     }
     properties = list(listing_collection.find(query, projection))
 
