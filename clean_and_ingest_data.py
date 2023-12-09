@@ -5,7 +5,7 @@ import pymongo
 import emoji
 from app.util.utils import read_json, get_mongo_collection, generate_password
 
-mongo_config_file_path = os.path.join(os.path.dirname(__file__), 'config', 'mongo_config.json')
+mongo_config_file_path = os.path.join(os.path.dirname(__file__), 'app/config', 'mongo_config.json')
 mongo_config_file_content = read_json(mongo_config_file_path)
 client = pymongo.MongoClient()
 listing_collection = get_mongo_collection(client, mongo_config_file_content["listing_collection_name"])
@@ -97,7 +97,7 @@ def parse_clean_add_user_data(src_dir):
 import time
 if __name__ == "__main__":
     a = time.time()
-    data_folder = "data"
+    data_folder = "app/data"
     parse_clean_add_listings_data(data_folder)
     parse_clean_add_user_data(data_folder)
     client.close()

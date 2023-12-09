@@ -6,6 +6,7 @@ import os
 import pymongo
 from datetime import datetime, timedelta
 from ..util.utils import read_json, get_mongo_collection
+from ..model.user import User
 
 router = APIRouter()
 
@@ -58,7 +59,13 @@ async def login_for_access_token(user_id: int, password: str):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return {"access_token": create_jwt_token({"sub": user["user_id"]}), "token_type": "bearer"}
+    return {"access_token": create_jwt_token({"sub": user["user_id"], "userType": user.get("userType", "")}), "token_type": "bearer"}
+
+@router.post("/create")
+async def create_user(user_data: User):
+    user_model = user_data.dict()
+    result = users_collection.insert_one(user_model)
+    return {**user_data.dict(), "id": str(result.inserted_id)}
 
 
 def get_jwt_token(user_id, password):

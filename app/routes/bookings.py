@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Query, Body, Depends
 import os
 import pymongo
-from ..util.utils import read_json, get_mongo_collection, get_current_user
+from ..util.utils import read_json, get_mongo_collection
+from .auth import get_current_user
 from ..model.user import User
-
+from bson import ObjectId
 
 router = APIRouter()
 
@@ -22,7 +23,8 @@ user_collection.create_index([("user_id", pymongo.ASCENDING)])
 async def search_properties(
     destination: str = Query(..., title="Destination"),
     from_date: str = Query(..., title="From Date"),
-    to_date: str = Query(..., title="To Date")
+    to_date: str = Query(..., title="To Date"),
+    current_user: str = Depends(get_current_user)
 ):
     query = {
         "location": {"$regex": destination, "$options": "i"},
@@ -55,23 +57,31 @@ async def search_properties(
 
 @router.post("/reserve/{property_id}")
 async def reserve_property(
-    property_id: str,
+    property_id: int,
     start_date: str = Body(...),
     end_date: str = Body(...),
     current_user: int = Depends(get_current_user),
 ):
     # Update the booking history of the property
-    booking_entry = {"user_id": str(current_user.id), "start_date": start_date, "end_date": end_date}
+    booking_entry = {"user_id": int(current_user), "start_date": start_date, "end_date": end_date}
 
-    listing_collection.update_one(
-        {"property_id": property_id},
-        {"$push": {"booking_history": booking_entry}},
-    )
+    updated_property = listing_collection.find_one_and_update(
+    {"property_id": property_id},
+    {"$push": {"booking_history": booking_entry}},
+    return_document=pymongo.ReturnDocument.AFTER
+)
+
+    # Convert ObjectId to string for _id field
+    updated_property['_id'] = str(updated_property['_id'])
 
     # Update the trips field of the user
-    user_collection.update_one(
-        {"_id": current_user.id},
-        {"$push": {"trips": property_id}},
+    updated_user = user_collection.find_one_and_update(
+        {"user_id": int(current_user)},
+        {"$set": {f"trips.{property_id}": []}},
+        return_document=pymongo.ReturnDocument.AFTER
     )
 
-    return {"message": "Reservation successful"}
+    # Convert ObjectId to string for _id field
+    updated_user['_id'] = str(updated_user['_id'])
+
+    return {"message": "Reservation successful", "updated_property": updated_property, "updated_user": updated_user}

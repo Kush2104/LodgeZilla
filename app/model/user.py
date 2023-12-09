@@ -6,3 +6,4 @@ class User(BaseModel):
     name: Optional[str] = None
     password: Optional[str] = None
     trips: Optional[object] = None
+    userType: Optional[str] = None 
