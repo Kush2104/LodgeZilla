@@ -9,3 +9,4 @@ class Property(BaseModel):
     price: Optional[int] = None
     location: Optional[str] = None
     booking_history: Optional[list] = None
+    host: Optional[int] = None

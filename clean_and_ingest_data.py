@@ -3,6 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import pymongo
 import emoji
+import random
 from app.util.utils import read_json, get_mongo_collection, generate_password
 
 mongo_config_file_path = os.path.join(os.path.dirname(__file__), 'app/config', 'mongo_config.json')
@@ -93,6 +94,37 @@ def parse_clean_add_user_data(src_dir):
         result = user_collection.bulk_write(bulk_write_updates)
     return 1
 
+def addRandomUserType():
+    # Find users without userType field
+    users_without_user_type = user_collection.find({"userType": {"$exists": False}})
+
+    # Iterate through each user and update with a random userType
+    for user in users_without_user_type:
+        random_user_type = random.choice(["host", "tourist"])
+        user_collection.update_one({"_id": user["_id"]}, {"$set": {"userType": random_user_type}})
+
+    print("User types randomly allocated for users without userType field.")
+    return
+
+def assignHost():
+    # Get all host users
+    host_user_ids = [user["user_id"] for user in user_collection.find({"userType": "host"})]
+
+# Iterate over properties and assign a random host_user_id
+    for property_doc in listing_collection.find():
+        if host_user_ids:
+            random_host_user_id = random.choice(host_user_ids)
+            # Update the property document with the host_user_id
+            listing_collection.update_one(
+                {"_id": property_doc["_id"]},
+                {"$set": {"host": random_host_user_id}}
+            )
+        else:
+            # Handle the case where there are no hosts
+            print("No hosts available.")
+
+    print("Hosts assigned to properties successfully.")
+
 
 import time
 if __name__ == "__main__":
@@ -100,6 +132,8 @@ if __name__ == "__main__":
     data_folder = "app/data"
     parse_clean_add_listings_data(data_folder)
     parse_clean_add_user_data(data_folder)
+    addRandomUserType()
+    assignHost()
     client.close()
     b = time.time()
     print('time: {}'.format(abs(a-b)))

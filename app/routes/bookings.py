@@ -4,7 +4,7 @@ import pymongo
 from ..util.utils import read_json, get_mongo_collection
 from .auth import get_current_user
 from ..model.user import User
-from bson import ObjectId
+from bson import ObjectId, Int64
 
 router = APIRouter()
 
@@ -23,8 +23,7 @@ user_collection.create_index([("user_id", pymongo.ASCENDING)])
 async def search_properties(
     destination: str = Query(..., title="Destination"),
     from_date: str = Query(..., title="From Date"),
-    to_date: str = Query(..., title="To Date"),
-    current_user: str = Depends(get_current_user)
+    to_date: str = Query(..., title="To Date")
 ):
     query = {
         "location": {"$regex": destination, "$options": "i"},
@@ -45,6 +44,7 @@ async def search_properties(
 
     projection = {
         "_id": 0,
+        "property_id": 1,
         "title": 1,
         "price": 1,
         "location": 1,
@@ -64,7 +64,6 @@ async def reserve_property(
 ):
     # Update the booking history of the property
     booking_entry = {"user_id": int(current_user), "start_date": start_date, "end_date": end_date}
-
     updated_property = listing_collection.find_one_and_update(
     {"property_id": property_id},
     {"$push": {"booking_history": booking_entry}},

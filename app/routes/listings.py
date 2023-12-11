@@ -19,8 +19,18 @@ listing_collection = get_mongo_collection(client, mongo_config_file_content["lis
 listing_collection.create_index([("property_id", pymongo.ASCENDING)])
 
 @router.get("/list", response_model=List[dict])
-async def get_listings(current_user: str = Depends(get_current_user)):
+async def get_listings():
     listings = list(listing_collection.find())
+    # Convert ObjectId to string for serialization
+    for listing in listings:
+        listing["_id"] = str(listing["_id"])
+
+    # Use JSONResponse and bson.json_util.dumps for proper serialization
+    return JSONResponse(content=dumps(listings))
+
+@router.get("/list/{user_id}", response_model=List[dict])
+async def get_listings(user_id: int):
+    listings = list(listing_collection.find({"host": user_id}))
     # Convert ObjectId to string for serialization
     for listing in listings:
         listing["_id"] = str(listing["_id"])
