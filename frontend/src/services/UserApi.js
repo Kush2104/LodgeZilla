@@ -1,6 +1,6 @@
 // apiService.js
 
-const API_BASE_URL = 'http://127.0.0.1:8000/auth';
+const API_BASE_URL = 'http://127.0.0.1:8000/api/auth';
 
 export const createUser = async (userData) => {
   try {

@@ -30,8 +30,8 @@ def create_jwt_token(data: dict):
     return encoded_jwt
 
 
-def get_user(name: str):
-    user = users_collection.find_one({"name": name})
+def get_user(name: str, password: str):
+    user = users_collection.find_one({"name": name, "password": password})
     return user
 
 
@@ -53,8 +53,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
 @router.post("/token")
 async def login_for_access_token(name: str, password: str):
-    user = get_user(name)
-    if len(user) == 0 or password != user["password"]:
+    user = get_user(name, password)
+    if user == None or password != user["password"]:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -71,7 +71,7 @@ async def create_user(user_data: User):
 
 def get_jwt_token(user_id, password):
     response = requests.post(
-        "http://localhost:8000/auth/token",
+        "http://localhost:8000/api/auth/token",
         data={"user_id": int(user_id), "password": password}
     )
     return response.json().get("access_token", None)
