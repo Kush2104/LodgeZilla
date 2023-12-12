@@ -10,7 +10,6 @@ uri = "mongodb+srv://maiyaanirudh:F6RPgjEaLMl6CTBs@cluster0.ah1kbxn.mongodb.net/
 
 # MongoDB Connection
 mongo_config_file_path = os.path.join(os.path.dirname(__file__), '../config', 'mongo_config.json')
-print(mongo_config_file_path)
 mongo_config_file_content = read_json(mongo_config_file_path)
 client = pymongo.MongoClient(uri)
 listing_collection = get_mongo_collection(client, mongo_config_file_content["listing_collection_name"])
