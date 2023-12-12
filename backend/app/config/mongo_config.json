@@ -1,5 +1,5 @@
 {
   "database_name": "lodgezilla",
-  "listing_collection_name": "lodgezilla_listing",
+  "listing_collection_name": "lodgezilla_properties",
   "user_collection_name": "lodgezilla_user"
 }

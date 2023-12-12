@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000/listings';
+const BASE_URL = 'http://127.0.0.1:8000/api/listings';
 
 export const getProperties = async (userId, token) => {
     try {
