@@ -14,10 +14,11 @@ SECRET_KEY = "INeedJWT"
 ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+uri = "mongodb+srv://maiyaanirudh:F6RPgjEaLMl6CTBs@cluster0.ah1kbxn.mongodb.net/?retryWrites=true&w=majority"
 
 mongo_config_file_path = os.path.join(os.path.dirname(__file__), '../config', 'mongo_config.json')
 mongo_config_file_content = read_json(mongo_config_file_path)
-client = pymongo.MongoClient()
+client = pymongo.MongoClient(uri)
 users_collection = get_mongo_collection(client, mongo_config_file_content["user_collection_name"])
 
 
