@@ -71,7 +71,7 @@ async def create_user(user_data: User):
 
 def get_jwt_token(user_id, password):
     response = requests.post(
-        "http://localhost:8000/auth/token",
+        "http://localhost:8000/api/auth/token",
         data={"user_id": int(user_id), "password": password}
     )
     return response.json().get("access_token", None)
