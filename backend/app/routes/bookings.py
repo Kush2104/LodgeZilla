@@ -3,6 +3,10 @@ import os
 import pymongo
 from ..util.utils import read_json, get_mongo_collection
 from .auth import get_current_user
+from kafka import KafkaProducer
+
+
+producer = KafkaProducer(bootstrap_servers='localhost:9093')
 
 router = APIRouter()
 
