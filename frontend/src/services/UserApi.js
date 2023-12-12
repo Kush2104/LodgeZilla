@@ -24,9 +24,9 @@ export const createUser = async (userData) => {
   }
 };
 
-export const login = async (user_id, password) => {
+export const login = async (name, password) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/token?user_id=${user_id}&password=${password}`, {
+      const response = await fetch(`${API_BASE_URL}/token?name=${name}&password=${password}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -9,12 +9,12 @@ import {useAuth} from '../services/AuthContext'
 const Login = () => {
   const { login: setAuthToken } = useAuth();
   const [isLoginView, setIsLoginView] = useState(true);
-  const [user_id, setUser_id] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleUser_idChange = (e) => {
-    setUser_id(e.target.value);
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -23,7 +23,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const data = await login(user_id, password);
+      const data = await login(name, password);
       setAuthToken(data.access_token);
 
       // Decode the JWT token to get user information
@@ -67,11 +67,11 @@ const Login = () => {
           <form>
             <div>
               <TextField
-                label="User ID"
+                label="User Name"
                 variant="outlined"
-                value={user_id}
-                onChange={handleUser_idChange}
-                placeholder="Enter User ID"
+                value={name}
+                onChange={handleNameChange}
+                placeholder="Enter User Name"
                 />
             </div>
             <div>
