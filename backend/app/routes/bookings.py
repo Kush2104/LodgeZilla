@@ -3,8 +3,6 @@ import os
 import pymongo
 from ..util.utils import read_json, get_mongo_collection
 from .auth import get_current_user
-from ..model.user import User
-from bson import ObjectId, Int64
 
 router = APIRouter()
 

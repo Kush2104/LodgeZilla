@@ -29,8 +29,8 @@ def create_jwt_token(data: dict):
     return encoded_jwt
 
 
-def get_user(user_id: int):
-    user = users_collection.find_one({"user_id": user_id})
+def get_user(name: str):
+    user = users_collection.find_one({"name": name})
     return user
 
 
@@ -51,8 +51,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
 
 @router.post("/token")
-async def login_for_access_token(user_id: int, password: str):
-    user = get_user(user_id)
+async def login_for_access_token(name: str, password: str):
+    user = get_user(name)
     if len(user) == 0 or password != user["password"]:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
