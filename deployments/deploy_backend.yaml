@@ -14,8 +14,15 @@ spec:
     spec:
       containers:
         - name: backend
-          image: kush2106/backend_image:v1.0.0
+          image: kush2106/backend_image:v2.0.0
           imagePullPolicy: Always
           command: ["python", "run.py"]
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
