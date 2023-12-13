@@ -19,4 +19,10 @@ spec:
           command: ["npm", "start"]
           ports:
             - containerPort: 3000
-
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "1000Mi"
+              cpu: "1000m"
