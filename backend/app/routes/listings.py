@@ -35,8 +35,10 @@ async def get_listings():
         listing["_id"] = str(listing["_id"])
 
     # Use JSONResponse and bson.json_util.dumps for proper serialization
+    push_to_redis("Getting listings", r, REDIS_KEY)
     push_to_redis(listings, r, REDIS_KEY)
     return JSONResponse(content=dumps(listings))
+
 
 @router.get("/list/{user_id}", response_model=List[dict])
 async def get_listings(user_id: int):
@@ -46,6 +48,7 @@ async def get_listings(user_id: int):
         listing["_id"] = str(listing["_id"])
 
     # Use JSONResponse and bson.json_util.dumps for proper serialization
+    push_to_redis("Getting listings", r, REDIS_KEY)
     push_to_redis(listings, r, REDIS_KEY)
     return JSONResponse(content=dumps(listings))
 
