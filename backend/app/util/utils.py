@@ -29,12 +29,6 @@ def encode_to_utf8(msg):
     return str(msg.encode("utf8"))
 
 
-def push_to_topic(msg, producer):
-    msg = str(msg).encode("utf8")
-    print(type(msg))
-    producer.send(topic="KafkaExplored", value=msg)
-
-
 def push_to_redis(msg, r, REDIS_KEY):
     msg = str(msg)
     count = r.lpush(REDIS_KEY, msg)

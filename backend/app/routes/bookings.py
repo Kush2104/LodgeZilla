@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Query, Body, Depends
 import os
 import pymongo
-import logging
 from ..util.utils import read_json, get_mongo_collection, push_to_redis
 from .auth import get_current_user
-from ..config import Constants
-from kafka import KafkaProducer
 import redis
 
 
@@ -15,10 +12,6 @@ redisHost = os.getenv("REDIS_HOST") or "localhost"
 redisPort = os.getenv("REDIS_PORT") or 6379
 r = redis.StrictRedis(host=redisHost, port=redisPort, db=0)
 
-
-
-# producer = KafkaProducer(bootstrap_servers='172.18.0.3:9092')
-# producer = KafkaProducer(bootstrap_servers='localhost:29092')
 router = APIRouter()
 
 
@@ -70,12 +63,9 @@ async def search_properties(
     }
 
 
-
-    #push_to_topic(query, producer)
     push_to_redis(query, r, REDIS_KEY)
     properties = list(listing_collection.find(query, projection))
     push_to_redis(properties, r, REDIS_KEY)
-    #push_to_topic("searching properties successful with result {}".format(properties), producer)
     return properties
 
 
