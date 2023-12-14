@@ -4,4 +4,4 @@ router = APIRouter()
 
 @router.get("/")
 async def get_listings():
-    return "Fuck you!!!"
+    return "This is the home"
