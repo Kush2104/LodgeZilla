@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Signup from '../components/SignUp'; // Import the Signup component
-import {login} from "../services/UserApi"
+import Signup from '../components/SignUp';
+import { login } from '../services/UserApi';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import {useAuth} from '../services/AuthContext'
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useAuth } from '../services/AuthContext';
 
 const Login = () => {
   const { login: setAuthToken } = useAuth();
   const [isLoginView, setIsLoginView] = useState(true);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleNameChange = (e) => {
@@ -19,6 +23,10 @@ const Login = () => {
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   const handleLogin = async () => {
@@ -41,9 +49,8 @@ const Login = () => {
     }
   };
 
-
   const handleSignup = () => {
-    setIsLoginView(false);    
+    setIsLoginView(false);
   };
 
   const handleCancel = () => {
@@ -59,8 +66,8 @@ const Login = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', backgroundColor: '#dcdcdc', height: '100vh'}}>
-      <img src="/images/LodgeZillaLogo.png" alt="LodgeZilla Logo" style={{ scale:100, marginBottom: '10px'}} />
+    <div style={{ textAlign: 'center', backgroundColor: '#dcdcdc', height: '100vh' }}>
+      <img src="/images/LodgeZillaLogo.png" alt="LodgeZilla Logo" style={{ scale: 100, marginBottom: '10px' }} />
       {isLoginView ? (
         <>
           <h2>User Login</h2>
@@ -72,22 +79,31 @@ const Login = () => {
                 value={name}
                 onChange={handleNameChange}
                 placeholder="Enter User Name"
-                />
+                style={{width: "250px"}}
+              />
             </div>
             <div>
-                <TextField
-                  label="Password"
-                  variant="outlined"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Enter Password"
-                />
+              <TextField
+                label="Password"
+                variant="outlined"
+                type={showPassword ? 'text' : 'password'} // Toggle between text and password type
+                value={password}
+                onChange={handlePasswordChange}
+                placeholder="Enter Password"
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  ),
+                }}
+              />
             </div>
             <div>
-              <Button type="button" onClick={handleLogin} style={{marginTop: '30px', marginRight: '10px'}}>
+              <Button type="button" onClick={handleLogin} style={{ marginTop: '30px', marginRight: '10px' }}>
                 Login
               </Button>
-              <Button type="button" onClick={handleSignup} style={{marginTop: '30px'}}>
+              <Button type="button" onClick={handleSignup} style={{ marginTop: '30px' }}>
                 Sign Up
               </Button>
             </div>
@@ -101,4 +117,3 @@ const Login = () => {
 };
 
 export default Login;
-

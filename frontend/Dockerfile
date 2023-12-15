@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 3000
 
 # Serve the built frontend application
-CMD ["npm", "start"]
+CMD ["npm", "run build"]
